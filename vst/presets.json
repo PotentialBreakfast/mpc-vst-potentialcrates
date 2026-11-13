@@ -1,0 +1,14 @@
+{
+ "presets": [
+  {
+   "name": "Dig",
+   "values": {
+    "source": "DISCOGS",
+    "wild": "MEDIUM",
+    "sync": "Off",
+    "auto_next": "On",
+    "volume": 0
+   }
+  }
+ ]
+}

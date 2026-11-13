@@ -1,0 +1,33 @@
+{
+ "name": "PotentialCrates",
+ "vendor": "PotentialBreaks",
+ "uid": "PbCr",
+ "version": 1000,
+ "so": "potentialcrates.so",
+ "params": "params.json",
+ "layout": "layout.conf",
+ "presets": "presets.json",
+ "defines": {
+  "HAS_DISPLAY_REV": 1,
+  "HAS_SONG_POS": 1,
+  "PARAM_TEXT_MAX": 96,
+  "MODULE_SUBDIR": "\".\""
+ },
+ "build": {
+  "root": "..",
+  "sources": [
+   "src/crates.c",
+   "src/core/yt_stream_plugin.c"
+  ],
+  "cflags": [
+   "-DYT_POSIX_SPAWN",
+   "-Isrc/core"
+  ],
+  "libs": [
+   "-lm",
+   "-lpthread"
+  ]
+ },
+ "art": "html",
+ "nrpn": false
+}

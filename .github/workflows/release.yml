@@ -1,0 +1,144 @@
+# Builds PotentialCrates from this repo's source and publishes it as a GitHub release.
+# To release: bump the version in vst/vst.json (1.2.3 = 1203), add .github/release-notes/v<version>.md and push to main
+# (or use the "New version" workflow). Every notes file that has no release yet is built -> host-tested (ASan) -> built for
+# armv7 and aarch64 -> zipped with release.py, with the engine bundle (tools/fetch_engine.sh) -> catalog-checked -> published.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/release-notes/**', '.github/workflows/release.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  KIT_REPO: https://github.com/open-mpc/mpc-vst-plugins
+  KIT_REF: 52c1fb072966d7de77e97dd9eec0544548b042dc   # pinned: Open MPC kit for MPC OS 3.10.1 (plugin.json, Gen2 and SDK zips)
+  ZIG_VERSION: 0.17.0
+  ABOUT: "Record digger: one-tap crates and ROLL dice find records on Discogs and play them into your MPC track."
+  REQUIRES: "A network connection (searches Discogs and streams from the web)"
+
+jobs:
+  pending:
+    runs-on: ubuntu-24.04
+    outputs:
+      tags: ${{ steps.p.outputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find release notes without a release
+        id: p
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          have=$(gh release list --repo ${{ github.repository }} --limit 200 --json tagName -q '.[].tagName' || true)
+          tags=()
+          for f in .github/release-notes/v*.md; do
+            [ -e "$f" ] || continue
+            t=$(basename "$f" .md)
+            echo "$have" | grep -qx "$t" || tags+=("$t")
+          done
+          json=$(printf '%s\n' "${tags[@]}" | python3 -c 'import sys,json; print(json.dumps([l.strip() for l in sys.stdin if l.strip()]))')
+          echo "pending: $json"
+          echo "tags=$json" >> "$GITHUB_OUTPUT"
+
+  release:
+    needs: pending
+    if: needs.pending.outputs.tags != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ${{ fromJSON(needs.pending.outputs.tags) }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Work out the version from the tag
+        id: t
+        run: |
+          TAG="${{ matrix.tag }}"
+          { echo "tag=$TAG"; echo "version=${TAG#v}"; } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Get the build kit (pinned) and tools
+        run: |
+          git clone -q "$KIT_REPO" kit && git -C kit checkout -q "$KIT_REF"
+          git -C kit apply ../shared/mpc-vst-plugins-label-fit.patch
+          pip install "ziglang==$ZIG_VERSION" pillow playwright
+          python -m playwright install --with-deps chromium   # the skins are drawn by the kit's browser renderer ("art": "html")
+          sudo apt-get update -qq && sudo apt-get install -y -qq gcc unzip
+
+      - name: Check the version in vst.json matches the tag
+        run: |
+          python3 - <<PY
+          import json
+          v = json.load(open("vst/vst.json"))["version"]
+          want = "${{ steps.t.outputs.version }}".split(".")
+          expect = int(want[0]) * 1000 + int(want[1]) * 100 + int(want[2])
+          assert v == expect, f"vst.json version {v} != tag {expect}"
+          PY
+
+      - name: Skin, params and host tests
+        run: |
+          mkdir -p vst/build
+          gcc -O2 -I kit/tools/vendor/force-shadow/tools -o vst/build/shadow_art kit/tools/shadow_art.c -lm
+          python3 shared/looks/build_looks.py vst kit   # the three looks, merged into one switchable skin
+          bash kit/tools/test_port.sh vst/vst.json
+          CF="-fsanitize=address,undefined -g -O1 -w -std=gnu11 -DYT_POSIX_SPAWN -I src -I src/core -I vst/build -I kit/wrapper"
+          # the LOOK switch, on a copy of the built plugin folder
+          gcc $CF shared/looks/test_theme.c src/crates.c src/core/yt_stream_plugin.c -lm -lpthread -o vst/build/test_theme
+          cp -r "vst/build/skin/PotentialBreaks - VST - PotentialCrates" "$RUNNER_TEMP/plugin"
+          vst/build/test_theme "$RUNNER_TEMP/plugin"
+          # the crates and ROLL: real Discogs genres and styles, valid filters at every wildness
+          gcc $CF tests/test_crates.c src/core/yt_stream_plugin.c -lm -lpthread -o vst/build/test_crates
+          vst/build/test_crates
+
+      - name: The engine bundle (yt-dlp, Python, ffmpeg), checked against pinned checksums
+        run: bash tools/fetch_engine.sh
+
+      - name: Build for the MPC (Gen1 armv7 and Gen2 aarch64)
+        run: |
+          K=$GITHUB_WORKSPACE/kit
+          SRC="src/crates.c src/core/yt_stream_plugin.c $K/wrapper/vst2_wrap.c"
+          INC="-DYT_POSIX_SPAWN -I src -I src/core -I vst/build -I $K/wrapper"
+          python3 -m ziglang cc -target arm-linux-gnueabihf.2.31 -mcpu=cortex_a9 -mfpu=neon -O2 -fPIC -shared \
+            -fvisibility=hidden -std=gnu11 $INC $SRC -lm -lpthread -Wl,--no-undefined -Wl,-s -o vst/build/potentialcrates.so
+          mkdir -p vst/build/aarch64
+          python3 -m ziglang cc -target aarch64-linux-gnu.2.31 -mcpu=cortex_a55 -O2 -fPIC -shared \
+            -fvisibility=hidden -std=gnu11 $INC $SRC -lm -lpthread -Wl,--no-undefined -Wl,-s -o vst/build/aarch64/potentialcrates.so
+          sha256sum vst/build/potentialcrates.so vst/build/aarch64/potentialcrates.so
+
+      - name: Package and check (per-CPU zips for the Open MPC installer, and a Gen1 folder zip)
+        run: |
+          K=$GITHUB_WORKSPACE/kit
+          V=${{ steps.t.outputs.version }}
+          BENCH=; [ -f vst/bench.txt ] && BENCH="--bench vst/bench.txt"   # the CPU figure measured on a Gen1 MPC
+          for arch in armv7 aarch64; do
+            so=vst/build/potentialcrates.so; [ $arch = aarch64 ] && so=vst/build/aarch64/potentialcrates.so
+            B=; [ $arch = armv7 ] && B="$BENCH"
+            python3 $K/tools/release.py --so $so --skin "vst/build/skin/PotentialBreaks - VST - PotentialCrates" \
+              --entry vst/build/pluginlist-entry.xml --version $V --id potentialcrates --repo ${{ github.repository }} --license MIT \
+              --extra vst/build/engine/$arch/Content:Content --user-data channels.txt \
+              --requires "$REQUIRES" --about "$ABOUT" $B -o $GITHUB_WORKSPACE/dist
+            python3 $K/tools/catalog_check.py dist/PotentialCrates-$V-mpc-$arch.zip --catalog
+          done
+          # the plugin folder on its own (Akai's folder format), Gen1: what MPC TOOLS installs. Gen2 uses the aarch64 zip.
+          python3 $K/tools/sdk_zip.py dist/PotentialCrates-$V-mpc-sdk.zip dist/PotentialCrates-$V-mpc-armv7.zip
+          cd dist && sha256sum *.zip | tee SHA256SUMS
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=${{ steps.t.outputs.tag }}
+          NOTES=.github/release-notes/$TAG.md
+          [ -f "$NOTES" ] || NOTES=/dev/null
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/*.zip dist/SHA256SUMS --clobber
+          else
+            gh release create "$TAG" dist/*.zip dist/SHA256SUMS --target "${{ github.sha }}" --title "PotentialCrates ${{ steps.t.outputs.version }}" --notes-file "$NOTES"
+          fi

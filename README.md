@@ -1,97 +1,85 @@
-# Crate Digger for MPC
+# PotentialCrates
 
-💬 Questions or feedback? Join the [Open MPC Discord](https://discord.gg/sRRysZSgu3).
+**Dig for records, one tap at a time.** Tap a crate, Drum Breaks or Library or Bossa & Samba, or tap **ROLL**. PotentialCrates finds records on Discogs and streams one into your MPC track, ready to sample.
 
-**Crate Digger** is a plugin instrument for Akai MPC standalone devices that digs for records and plays them into an MPC track. Pick a genre,
-style, decade, region and country, and it finds random releases on Discogs, then streams a playable version (usually from YouTube) so you can
-audition and resample them. It can also search YouTube for text you type, or pick uploads from your own YouTube channels and playlists.
+![PotentialCrates's DIG page on the MPC (Print Plate look)](docs/images/potentialcrates.png)
 
-The screen is styled after a vintage MPC: a green LCD that shows what is playing, the status, the time and your filters, big knobs and keys,
-a GAIN fader and a stereo level meter. Everything is reachable from the Q-Links.
+*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.0.0 · needs a network connection*
 
-![PLAY](docs/screenshots/play.png)
+Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
 
-## Features
-- **Three pages.** PLAY (transport and the results), FILTERS (five knobs: genre, style, decade, region, country, each over its own column on the LCD) and FIND
-  (source, text search, YouTube length filters, channels, popup keyboard).
-- **Results:** up to 16 per search in a paged 2 x 4 list; tap a row to play it. A result that cannot play says why in STATUS (private video, removed,
-  copyright, region blocked, ...); tap another row.
-- **Transport:** play / pause, stop, 15 s back and forward, and a **SYNC** key for resampling: with it on a tapped result loads and waits, silent,
-  until you press Play on the MPC; the MPC's Stop pauses it.
-- **Sources (FIND):** DISCOGS (the filters, plus optional text), YOUTUBE (search for the text; set a minimum and maximum length; MUSIC ONLY), and
-  CHANNEL (random uploads from a channel or playlist you list in `channels.txt`).
-- **GAIN and LEVEL:** a horizontal gain fader and a stereo level meter on every page.
-- **Saved with your project:** the filters, source, lengths, gain and the typed text come back when you reopen it. Projects saved with Crate Digger
-  1.x still load.
+PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-cratedigger)** by sd88me. It uses Crate Digger's streaming engine, which is built on Charles Vestal's [schwung-webstream](https://github.com/charlesvestal/schwung-webstream). Crate Digger's full history is kept in this repo. Thanks to both.
 
-![FILTERS](docs/screenshots/filters.png)
+**[Download the latest release](../../releases/latest)** · [Ideas and bugs](../../issues/new/choose)
 
-## Requirements
-- An MPC standalone device with a network connection (search and streaming happen on the device).
-  - **64-bit MPCs (MPC Live III and other aarch64 units):** use the `aarch64` package.
-  - **32-bit MPCs (Force, MPC Live, Live II, One, X, Key):** use the `armv7` package.
-- Plugin folders are copied to the device; on a Force and other MPC OS that lists plugins in `MPC.settings` the installer needs **root shell access
-  (SSH)**, which stock MPC OS does not offer. Installing plugins this way is unofficial: back up first and use it at your own risk.
+## What it does
+
+- **CRATES:** eight one-tap digs. Each picks one of a few real Discogs genre, style and decade combinations, searches, and plays the first result.
+
+  | Crate | Digs in |
+  |---|---|
+  | **DRUM BREAKS** | Funk, Soul, Jazz-Funk, Boogaloo and Afrobeat, 60s and 70s |
+  | **LIBRARY** | library records across Stage & Screen, Jazz and Electronic, 60s to 80s |
+  | **SOUNDTRACKS** | Soundtrack and Score, 60s to 80s |
+  | **JAZZ-FUNK** | Jazz-Funk, Soul-Jazz and Fusion |
+  | **PSYCH** | Psychedelic Rock, Krautrock, psychedelic Soul |
+  | **BOSSA & SAMBA** | Bossanova, Samba, MPB, Bossa Nova jazz |
+  | **DISCO & BOOGIE** | Disco and Boogie, 70s and 80s |
+  | **DUB & REGGAE** | Dub, Roots Reggae, Rocksteady |
+
+- **ROLL** picks the filters for you, searches and plays the result. **MILD**, **MEDIUM** or **WILD** next to it sets how far it goes:
+  - **MILD** stays in the genre you're in (or a digger's favourite), picks a style of it, 60s or 70s.
+  - **MEDIUM** picks a digger's genre, any of its styles, 50s to 90s.
+  - **WILD** picks any genre, style and decade, and sometimes a country too.
+- **If a dig finds nothing**, it digs again with new picks, up to 3 times, so one tap almost always ends in music.
+- **AUTO NEXT** (on by default) moves to the next result when a track ends or won't play. **NEXT** skips by hand.
+- **FILTERS** is Crate Digger's dig: genre, style, decade, region and country with arrows, then **SEARCH**. **CLEAR FILTERS** sets them all back to ANY. **SOURCE: CHANNEL** digs random uploads from YouTube channels you list (see below).
+- **RESULTS** lists 8 a page. Tap one to play it. **PAGE UP** and **PAGE DOWN** move through the pages.
+- **PLAY**, **STOP**, **BACK 15** and **FWD 15** are the transport.
+- **SYNC**: a track loads and waits, silent, until you press Play on the MPC, and the MPC's Stop pauses it. This is for resampling in time.
+- **The status line says why** a track won't play: private video, removed, region blocked, rate limited, no network.
+- **LOOK** (on the SETTINGS page) switches between **Print Plate**, **Night Rack** and **Colour Block**. A new look shows the next time the plugin loads.
+- Your project remembers the filters, source, ROLL setting, SYNC, AUTO NEXT and volume.
+
+![The CRATES page](docs/images/potentialcrates-crates.png)
 
 ## Install
-Download the package for your device from [Releases](https://github.com/sd88me/mpc-vst-cratedigger/releases) and unzip it. Each package has an
-`INSTALL.txt` with the same steps.
 
-**MPC OS that loads plugin folders from `VST2 Plugins`** (aarch64 package, and the armv7 package on devices whose MPC OS supports it): copy the folder
-`VST2 Plugins/sd88me - VST - Crate Digger` into a folder named exactly `VST2 Plugins` at the root of a drive the MPC can see (internal storage, an SD
-card or a USB drive). Turn on **Preferences > Enhancements > Enable Enhancements** and **VST2 Support**, restart the MPC, and add **Crate Digger** from
-External VST Plugins.
+PotentialCrates carries its own yt-dlp, Python and ffmpeg (the engine), so the download is big: about 70 MB for a Gen1 MPC and 90 MB for a Gen2.
 
-**Force and other MPC OS that lists plugins in `MPC.settings`** (armv7 package):
-```sh
-scp -r <the unzipped folder> root@<device-ip>:/tmp/crate-digger
-ssh root@<device-ip> sh /tmp/crate-digger/install-force.sh
-```
-This stops the MPC (save your project first), copies the plugin to `/sdcard/Synths`, backs up and edits `MPC.settings`, and restarts the MPC. An
-older Crate Digger (1.x) is replaced and your `channels.txt` is kept. Add `-y` to skip the confirmation.
+- **With MPC TOOLS:** in the Plugins tab, tap **UPDATE** on PotentialCrates (or **+ ADD A PLUGIN** and paste this repo's address).
+- **With the Open MPC installer or Plugin Manager:** use the zip for your MPC: `-mpc-armv7.zip` for a Gen1 (MPC One, Live, Live II, X, Key, Force) or `-mpc-aarch64.zip` for a Gen2 (Live III and other 64-bit units).
+- **By hand (MPC OS 3.10.1+, Gen1):** unzip `-mpc-sdk.zip` and copy the folder `PotentialBreaks - VST - PotentialCrates` into `VST2 Plugins` at the top of a drive the MPC can see.
 
-The plugin folder is about 125 MB (armv7) or 180 MB (aarch64): it carries its own yt-dlp, Python and ffmpeg and needs no other setup. To upgrade,
-replace the whole plugin folder.
-![FIND](docs/screenshots/find.png)
+Then turn on **Preferences > Enhancements > VST2 Support**, restart the MPC and add **PotentialCrates** from External VST Plugins.
 
-## Using it
-1. **FILTERS:** turn a knob (or tap its arrows) to pick a genre, style, decade, region and country; each choice shows on the LCD above its knob.
-   STYLE follows GENRE and COUNTRY follows REGION. Press **SEARCH**.
-2. **PLAY:** results appear as rows on the LCD. Tap a row to play it. Use PAGE to see the next eight.
-3. **FIND:** choose a source. For text, press **KEYBOARD**, type, and press SEARCH on the keyboard (HIDE closes it without searching).
+The first time it loads it gets the engine ready, which takes a moment. If the engine lost its "executable" marks (a zip unpacked on Windows), it puts them back. On a drive that can't run programs (an exFAT SD card or USB stick), it copies the engine to the MPC's internal drive once, as Crate Digger 2 does.
 
-### Channels
-List your channels in `channels.txt` in the plugin folder (next to `plugin.json`), one per line: a channel link, an `@handle`, a `UC...` ID or a
-playlist link, and optionally a name after a `|`. See `channels.example.txt`. The CHANNEL selector steps through them. A channel's newest 500
-uploads load in the background on the first search (it may say "Still loading the channel": press SEARCH again).
+It installs next to Crate Digger, not over it: it has its own name, maker and plugin ID.
+
+### Channels (optional)
+
+To dig random uploads from YouTube channels or playlists, make a `channels.txt` in the plugin folder, one per line: a channel link, an `@handle`, a `UC...` ID or a playlist link, then `|` and a name if you like. `Content/channels.example.txt` shows the format. Set **SOURCE** to **CHANNEL** and pick one with the arrows.
 
 ### Discogs token (optional, recommended)
-Crate Digger works without a token (Discogs allows 25 requests a minute per device). A free personal access token from
-[discogs.com/settings/developers](https://www.discogs.com/settings/developers) raises that to 60. Put it in
-`/data/UserData/schwung/config/webstream_providers.json` on the device:
+
+It works without one (Discogs allows 25 requests a minute). A free personal access token from [discogs.com/settings/developers](https://www.discogs.com/settings/developers) raises that to 60. Put it in `/data/UserData/schwung/config/webstream_providers.json` on the MPC:
+
 ```json
 { "providers": { "cratedig": { "token": "YOUR_DISCOGS_PERSONAL_TOKEN" } } }
 ```
 
-## Troubleshooting
-The SEARCH and STATUS lines say what went wrong. See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md). The plugin writes
-`/tmp/cratedigger_vst.log` on the device.
+## Good to know
 
-## How it works
-The engine is the [schwung-webstream](https://github.com/charlesvestal/schwung-webstream) core (Charles Vestal, MIT), built here without `fork()`.
-It resolves and streams Discogs results through yt-dlp and ffmpeg on a worker thread into a ring buffer; the MPC's audio thread only copies from the
-ring. `src/sdk/CrateDiggerPlugin.cpp` is the plugin and `tools/make_tui.py` draws the skin.
+- It's a browser and player, not a synth: no MIDI notes in or out.
+- Playback depends on yt-dlp working out the stream live on the MPC. YouTube changes things from time to time, and a result can be unavailable in your region. **AUTO NEXT** skips those.
+- Use it within Discogs' and YouTube's terms. PotentialCrates isn't affiliated with Akai Professional, Discogs or YouTube.
+- Logs: the engine writes `/tmp/webstream-runtime.log` on the MPC.
 
-## Build
-Needs Docker. `./build-sdk.sh` builds both CPUs into `build/sdk/`; `tools/package.sh` makes the two zips in `dist/`;
-`tests/run.sh` runs the offline test. The engine bundles (yt-dlp, Python, ffmpeg) are taken from the previous release the first time.
+## How it's built
 
-## Known limitations
-- A browser and player, not a synth: it makes no MIDI notes and ignores MIDI input.
-- Playback depends on yt-dlp resolving the linked sources live on the device; those paths break upstream from time to time, and a result can be
-  unavailable in your region.
-- Tested on an MPC Live III and a Force.
+`src/crates.c` is the plugin: the PotentialSuite front end (pages, CRATES, ROLL, AUTO NEXT, the LOOK switch) on the [Open MPC kit](https://github.com/open-mpc/mpc-vst-plugins)'s VST2 wrapper. `src/core/` is Crate Digger's streaming core, unchanged apart from one fallback for MPC OS's older glibc. `tools/fetch_engine.sh` takes the engine bundle from Crate Digger 2.0.0's release and checks it against pinned checksums. The release workflow (`.github/workflows/release.yml`) builds, tests and packages everything. See [BUILD.md](BUILD.md).
 
 ## Credits and licence
-MIT, see `LICENSE`. The streaming core is MIT licensed by Charles Vestal (`UPSTREAM_LICENSE.txt`, `UPSTREAM_THIRD_PARTY_NOTICES.md`). The channel
-source was started by PotentialBreakfast (PR #21).
+
+MIT, see `LICENSE`. Crate Digger is by sd88me and its contributors. The streaming core is by Charles Vestal (`UPSTREAM_LICENSE.txt`, `UPSTREAM_THIRD_PARTY_NOTICES.md`). The engine bundle's programs have their own licences (yt-dlp: Unlicense; ffmpeg: GPL-3.0; Python: PSF), listed in [THIRD_PARTY.md](THIRD_PARTY.md) and shipped in `Content/engine/LICENSES`.
