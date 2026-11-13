@@ -4,7 +4,7 @@
 
 ![PotentialCrates's DIG page on the MPC (Print Plate look)](docs/images/potentialcrates.png)
 
-*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.0.0 · needs a network connection*
+*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.0.1 · needs a network connection*
 
 Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
 
@@ -36,7 +36,7 @@ PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-
 - **FILTERS** is Crate Digger's dig: genre, style, decade, region and country with arrows, then **SEARCH**. **CLEAR FILTERS** sets them all back to ANY. **SOURCE: CHANNEL** digs random uploads from YouTube channels you list (see below).
 - **RESULTS** lists 8 a page. Tap one to play it. **PAGE UP** and **PAGE DOWN** move through the pages.
 - **PLAY**, **STOP**, **BACK 15** and **FWD 15** are the transport.
-- **SYNC**: a track loads and waits, silent, until you press Play on the MPC, and the MPC's Stop pauses it. This is for resampling in time.
+- **TRANSPORT SYNC**: a track loads and waits, silent, until you press Play on the MPC, and the MPC's Stop pauses it. This is for resampling in time.
 - **The status line says why** a track won't play: private video, removed, region blocked, rate limited, no network.
 - **LOOK** (on the SETTINGS page) switches between **Print Plate**, **Night Rack** and **Colour Block**. A new look shows the next time the plugin loads.
 - Your project remembers the filters, source, ROLL setting, SYNC, AUTO NEXT and volume.

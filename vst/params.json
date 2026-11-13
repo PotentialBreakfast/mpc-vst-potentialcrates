@@ -290,7 +290,7 @@
     },
     {
       "key": "sync",
-      "name": "Sync",
+      "name": "Transport Sync",
       "options": [
         "Off",
         "On"
