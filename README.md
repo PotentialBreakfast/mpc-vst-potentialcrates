@@ -4,7 +4,7 @@
 
 ![PotentialCrates's DIG page on the MPC (Print Plate look)](docs/images/potentialcrates.png)
 
-*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.1 · needs a network connection*
+*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.2 · needs a network connection*
 
 Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
 
