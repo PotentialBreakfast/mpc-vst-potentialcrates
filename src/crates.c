@@ -29,6 +29,8 @@ extern char **environ;
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <dirent.h>
+#include <strings.h>
 #include <unistd.h>
 #include "engine.h"
 #include "../shared/looks/potential_theme.h"   /* the LOOK switch (parameter "theme") */
@@ -225,6 +227,96 @@ static int style_index(const char *genre, const char *style) {
 }
 
 /* ---------------- channels.txt: "link-or-@handle-or-UC-id | Name", one a line ---------------- */
+/* 1.1.1: with no channels.txt the CHANNEL source only said "add channels to channels.txt", and there was no file to
+ * edit. Now the first start makes one in the plugin folder: a copy of the list an old Crate Digger on the same drive
+ * already has (its folder, cratedigger/ or Content/), else a short how-to with commented-out examples. Updates keep it
+ * (it is the release's user data). */
+static const char CHANNELS_HOWTO[] =
+    "# PotentialCrates: the YouTube channels for SOURCE: CHANNEL.\n"
+    "# One per line, up to 16: a channel link, an @handle, a UC... channel ID or a playlist link,\n"
+    "# then | and the name to show on the screen, if you like. Lines starting with # are skipped.\n"
+    "# Updates keep this file. Edit it on your computer (MPC TOOLS can copy it over) and the plugin\n"
+    "# picks up the change by itself.\n"
+    "#\n"
+    "#https://www.youtube.com/@yourchannel | Your Channel\n"
+    "#@anotherchannel\n"
+    "#https://www.youtube.com/playlist?list=PLxxxxxxxxxxxx | A Playlist\n";
+
+static int channels_in(const char *path) {     /* how many channel lines a file has (0: none, or no file) */
+    FILE *f = fopen(path, "r");
+    if (!f) return 0;
+    char line[512];
+    int n = 0;
+    while (fgets(line, sizeof line, f)) {
+        char *l = line;
+        while (*l == ' ' || *l == '\t') l++;
+        if (*l && *l != '#' && *l != '\r' && *l != '\n') n++;
+    }
+    fclose(f);
+    return n;
+}
+static int copy_text(const char *from, const char *to) {
+    FILE *a = fopen(from, "rb");
+    if (!a) return 0;
+    char tmp[820];
+    snprintf(tmp, sizeof tmp, "%s.tmp", to);
+    FILE *b = fopen(tmp, "wb");
+    if (!b) { fclose(a); return 0; }
+    char buf[4096];
+    size_t r;
+    int ok = 1;
+    while ((r = fread(buf, 1, sizeof buf, a)) > 0) if (fwrite(buf, 1, r, b) != r) ok = 0;
+    fclose(a);
+    if (fclose(b) != 0) ok = 0;
+    if (ok && rename(tmp, to) != 0) ok = 0;
+    if (!ok) remove(tmp);
+    return ok;
+}
+/* an old Crate Digger's list in folder `dir` (a plugins folder): "<dir>/<...Crate Digger...>/[cratedigger/|Content/]channels.txt" */
+static int find_old_list(const char *dir, const char *self, char *out, size_t n) {
+    DIR *d = opendir(dir);
+    if (!d) return 0;
+    struct dirent *e;
+    int found = 0;
+    while (!found && (e = readdir(d))) {
+        const char *nm = e->d_name;
+        if (nm[0] == '.' || !(strcasestr(nm, "crate digger") || strcasestr(nm, "cratedigger") || strcasestr(nm, "channel-digger")))
+            continue;
+        static const char *const SUB[] = {"", "/cratedigger", "/Content"};
+        for (int i = 0; i < 3 && !found; i++) {
+            char p[1000];
+            snprintf(p, sizeof p, "%s/%s%s/channels.txt", dir, nm, SUB[i]);
+            if (strncmp(p, self, strlen(self)) && channels_in(p) > 0) { snprintf(out, n, "%s", p); found = 1; }
+        }
+    }
+    closedir(d);
+    return found;
+}
+static void ensure_channels(pc_t *s) {
+    char path[800], parent[700], drive[700], from[1000] = "";
+    struct stat sb;
+    if (!s->data_dir[0]) return;
+    snprintf(path, sizeof path, "%s/channels.txt", s->data_dir);
+    if (stat(path, &sb) == 0) return;
+    snprintf(parent, sizeof parent, "%s", s->data_dir);
+    char *sl = strrchr(parent, '/');
+    if (!sl || sl == parent) return;
+    *sl = 0;                                              /* ".../VST2 Plugins" */
+    snprintf(drive, sizeof drive, "%s", parent);
+    sl = strrchr(drive, '/');
+    if (sl && sl != drive) *sl = 0; else drive[0] = 0;    /* the drive: "/media/USB1" */
+    int got = find_old_list(parent, s->data_dir, from, sizeof from);
+    static const char *const OLD[] = {"Synths", "Synths-old", "Synths old", "VST2 Plugins"};
+    for (int i = 0; i < 4 && !got && drive[0]; i++) {
+        char d[800];
+        snprintf(d, sizeof d, "%s/%s", drive, OLD[i]);
+        got = find_old_list(d, s->data_dir, from, sizeof from);
+    }
+    if (got && copy_text(from, path)) return;
+    FILE *f = fopen(path, "w");
+    if (f) { fputs(CHANNELS_HOWTO, f); fclose(f); }
+}
+
 static void load_channels(pc_t *s) {
     char path[800];
     struct stat sb;
@@ -501,7 +593,7 @@ static void refresh_text(pc_t *s) {
         snprintf(dims[d], 64, "%s", v[0] ? v : "ANY");
         upper(dims[d]);
     }
-    if (!s->nch) snprintf(chan, sizeof chan, "NONE - ADD CHANNELS TO CHANNELS.TXT");
+    if (!s->nch) snprintf(chan, sizeof chan, "NO CHANNELS YET - ADD SOME TO CHANNELS.TXT");
     else { clip(chan, sizeof chan, s->ch[s->chan].name, 60); upper(chan); }
     snprintf(crate, sizeof crate, "%s", s->crate_info[0] ? s->crate_info : "TAP A CRATE");
     pthread_mutex_unlock(&s->lk);
@@ -526,6 +618,7 @@ static void *worker(void *arg) {
     pc_t *s = arg;
     int16_t block[BLOCK * 2];
     long long next_ui = 0;
+    ensure_channels(s);
     start_engine(s);
     while (__atomic_load_n(&s->run, __ATOMIC_ACQUIRE)) {
         long long t = now_ms();
