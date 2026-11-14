@@ -32,6 +32,7 @@ extern char **environ;
 #include <unistd.h>
 #include "engine.h"
 #include "../shared/looks/potential_theme.h"   /* the LOOK switch (parameter "theme") */
+#include "../shared/potential_manual.h"        /* the MANUAL tab's page */
 #include "core/plugin_api_v1.h"
 #include "cratedig_tables.h"
 
@@ -147,6 +148,7 @@ typedef struct {
     unsigned display_rev;
     uint64_t pending;                /* params this engine changed itself (mpc_engine_changed) */
     pt_theme_t theme;
+    pm_manual_t manual; /* the MANUAL tab's page: not part of the sound or the saved state */
 } pc_t;
 
 static long long now_ms(void) {
@@ -713,6 +715,7 @@ static int clampi(float v, int lo, int hi) { int i = (int)lroundf(v); return i <
 static void set_param(void *inst, const char *key, const char *val) {
     pc_t *s = inst;
     if (pt_theme_set(&s->theme, key, val)) return;
+    if (pm_set(&s->manual, key, val)) return;
     if (!strncmp(key, "res_", 4)) {   /* a result row: any tap (the row toggles either way) plays it */
         int row = atoi(key + 4) - 1;
         if (row < 0 || row >= SLOTS || time(NULL) < s->quiet_until) return;
@@ -814,6 +817,7 @@ int mpc_engine_changed(void *inst, char *key, int len) {
 static int get_param(void *inst, const char *key, char *buf, int buf_len) {
     pc_t *s = inst;
     { int n = pt_theme_get(&s->theme, key, buf, buf_len); if (n) return n; }
+    { int pm_n = pm_get(&s->manual, key, buf, buf_len); if (pm_n) return pm_n; }
     if (!strcmp(key, "display_rev")) {
         pthread_mutex_lock(&s->tx);
         int n = snprintf(buf, buf_len, "%u", s->display_rev);

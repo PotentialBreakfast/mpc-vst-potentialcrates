@@ -4,7 +4,7 @@
 
 ![PotentialCrates's DIG page on the MPC (Print Plate look)](docs/images/potentialcrates.png)
 
-*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.0.1 · needs a network connection*
+*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.0 · needs a network connection*
 
 Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
 
@@ -43,6 +43,8 @@ PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-
 - Your project remembers the filters, source, ROLL setting, SYNC, AUTO NEXT and volume.
 
 ![The CRATES page](docs/images/potentialcrates-crates.png)
+
+**MANUAL page:** the manual is on the MPC's screen too. Tap **MANUAL**, then the page buttons along the top. The full [PotentialSuite manual](https://github.com/PotentialBreakfast/potential-plugins/blob/main/MANUAL.md) covers every plugin, the FX chains and a developer reference.
 
 ## Install
 

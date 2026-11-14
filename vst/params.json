@@ -371,6 +371,7 @@
       "name": "Result 8",
       "type": "slot",
       "display": "string"
-    }
+    },
+    {"key": "manual_page", "name": "Manual Page", "options": ["START", "CRATES", "DIG", "SAMPLING", "SUITE", "HELP"], "default": 0}
   ]
 }

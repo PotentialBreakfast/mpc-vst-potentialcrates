@@ -1,0 +1,59 @@
+= START
+# PotentialCrates: dig for records
+Tap a crate or tap ROLL. PotentialCrates finds records on Discogs and streams one into your MPC track, ready to sample.
+
+- Load it as a plugin instrument (a plugin program). It needs a network connection.
+- CRATES page: eight one-tap digs. Each one searches and plays the first result.
+- DIG page: SEARCH digs with your filters, RESULTS lists 8 a page, tap one to play it.
+- If a dig finds nothing, it digs again with new picks, up to 3 times.
+
+The full PotentialSuite manual: github.com/PotentialBreakfast/potential-plugins
+
+= CRATES
+# The eight crates
+- DRUM BREAKS: Funk, Soul, Jazz-Funk, Boogaloo and Afrobeat, 60s and 70s.
+- LIBRARY: library records across Stage & Screen, Jazz and Electronic, 60s to 80s.
+- SOUNDTRACKS: Soundtrack and Score, 60s to 80s.
+- JAZZ-FUNK: Jazz-Funk, Soul-Jazz and Fusion.
+- PSYCH: Psychedelic Rock, Krautrock and psychedelic Soul.
+- BOSSA & SAMBA: Bossanova, Samba, MPB and Bossa Nova jazz.
+- DISCO & BOOGIE: Disco and Boogie, 70s and 80s.
+- DUB & REGGAE: Dub, Roots Reggae and Rocksteady.
+
+= DIG
+# DIG and FILTERS pages
+- SEARCH digs Discogs with your filters. Leave them all on ANY for anything at all.
+- FILTERS: genre, style, decade, region and country with arrows. CLEAR FILTERS sets them all back to ANY.
+- ROLL (FILTERS and CRATES pages) picks the filters for you, searches and plays the result.
+- MILD stays in the genre you are in and picks a style of it, 60s or 70s. MEDIUM picks a digger's genre, 50s to 90s. WILD picks any genre, style and decade, and sometimes a country.
+- SOURCE: CHANNEL digs random uploads from the YouTube channels you list in channels.txt.
+- PLAY, STOP, BACK 15 and FWD 15 are the transport. NEXT skips to the next result.
+- AUTO NEXT moves on when a track ends or will not play.
+
+= SAMPLING
+# Sampling what you find
+- TRANSPORT SYNC: a track loads and waits, silent, until you press Play on the MPC, and the MPC's Stop pauses it. This is for resampling in time.
+- Record the track's output with the MPC's sampler or looper, then chop it.
+- Save what you record into your MELODIC LIBRARY folder for PotentialWax, or your DRUM BREAKS LIBRARY folder for PotentialBreaks, then RESCAN there.
+- The status line says why a track will not play: private video, removed, region blocked, rate limited or no network.
+
+Check that you have the right to use what you sample before you release it.
+
+= SUITE
+# With the other plugins
+- Crates finds it, PotentialWax flips melodies, PotentialBreaks chops drums.
+- Dusty Loop chain on a sampled loop: Bleed > Patina > Grit, the same preset name in each.
+- Break Bus chain on sampled drums: Punch > Grit > Bleed > Patina.
+- PotentialNoise gives a balanced rough mix once the beat is built.
+
+= HELP
+# Good to know
+- Your project remembers the filters, source, ROLL setting, SYNC, AUTO NEXT and volume.
+- channels.txt in the plugin's folder lists the YouTube channels for SOURCE: CHANNEL, one per line.
+- Streaming needs the MPC online. If nothing plays, check the network first, then the status line.
+- Q-Links: AUTO NEXT and SYNC on DIG, VOLUME and the ROLL setting on CRATES.
+- Looks: Print Plate, Night Rack or Colour Block, on the SETTINGS page.
+
+PotentialCrates is a fork of Crate Digger by sd88me, built on Charles Vestal's schwung-webstream. Thanks to both.
+
+Ideas, bugs and criticism are all welcome: github.com/PotentialBreakfast/mpc-vst-potentialcrates
