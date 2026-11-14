@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2 (2026-11)
+- The DIG page's big button is now SEARCH (Discogs, with your filters). ROLL and MILD / MEDIUM / WILD moved to the FILTERS page, next to SEARCH. ROLL is still on the CRATES page too.
+
 ## 1.0.1
 
 The SYNC switch on the DIG page is now labelled TRANSPORT SYNC, as in Crate Digger.

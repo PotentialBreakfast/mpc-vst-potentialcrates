@@ -471,7 +471,7 @@ static void make_text(pc_t *s, char now[TXT], char status[48], char tm[32], char
         core_get(s, "search_error", err, sizeof err);
         if (err[0]) { clip(search, TXT, err, 90); upper(search); }
         else snprintf(search, TXT, "%s", !strcmp(ss, "error") ? "SEARCH ERROR" : "NOTHING FOUND - TRY ROLL OR ANOTHER CRATE");
-    } else snprintf(search, TXT, "TAP ROLL OR A CRATE TO DIG, OR SET FILTERS AND SEARCH");
+    } else snprintf(search, TXT, "TAP SEARCH TO DIG DISCOGS, OR PICK A CRATE");
     for (int r = 0; r < SLOTS; r++) {
         int idx = s->page * SLOTS + r;
         res[r][0] = 0;

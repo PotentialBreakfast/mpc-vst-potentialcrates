@@ -27,7 +27,8 @@ PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-
   | **DISCO & BOOGIE** | Disco and Boogie, 70s and 80s |
   | **DUB & REGGAE** | Dub, Roots Reggae, Rocksteady |
 
-- **ROLL** picks the filters for you, searches and plays the result. **MILD**, **MEDIUM** or **WILD** next to it sets how far it goes:
+- **SEARCH** (top right of the DIG page) digs Discogs with your filters. Leave them all on ANY for anything at all.
+- **ROLL** (on the FILTERS and CRATES pages) picks the filters for you, searches and plays the result. **MILD**, **MEDIUM** or **WILD** next to it sets how far it goes:
   - **MILD** stays in the genre you're in (or a digger's favourite), picks a style of it, 60s or 70s.
   - **MEDIUM** picks a digger's genre, any of its styles, 50s to 90s.
   - **WILD** picks any genre, style and decade, and sometimes a country too.
