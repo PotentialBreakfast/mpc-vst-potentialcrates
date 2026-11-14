@@ -74,7 +74,7 @@ int main(void) {
         assert(system(cmd) == 0);
         pc_t c = {0};
         snprintf(me, sizeof me, "%s/VST2 Plugins/PotentialBreaks - VST - PotentialCrates", drv);
-        snprintf(c.data_dir, sizeof c.data_dir, "%s", me);
+        snprintf(c.data_dir, sizeof c.data_dir, "%s/.", me);   /* as the wrapper gives it (MODULE_SUBDIR ".") */
         ensure_channels(&c);
         snprintf(ch, sizeof ch, "%s/channels.txt", me);
         CHECK(channels_in(ch) == 1, "the old Crate Digger's list was not copied");
@@ -88,6 +88,11 @@ int main(void) {
         CHECK(f && fgets(line, sizeof line, f) && strstr(line, "PotentialCrates"), "no how-to channels.txt written");
         if (f) fclose(f);
         CHECK(channels_in(ch) == 0, "the how-to should hold no live channels");
+        /* a how-to with no channels yet: an old list found later still replaces it (1.1.2) */
+        snprintf(cmd, sizeof cmd, "mkdir -p '%s/Synths-old/sd88me - VST - Crate Digger/cratedigger' && printf '@later | Later\\n' > '%s/Synths-old/sd88me - VST - Crate Digger/cratedigger/channels.txt'", drv, drv);
+        assert(system(cmd) == 0);
+        ensure_channels(&c);
+        CHECK(channels_in(ch) == 1, "the how-to was not replaced by the old list");
         /* an existing list is never touched */
         snprintf(cmd, sizeof cmd, "printf '@kept\\n' > '%s'", ch);
         assert(system(cmd) == 0);

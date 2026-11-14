@@ -297,8 +297,14 @@ static void ensure_channels(pc_t *s) {
     struct stat sb;
     if (!s->data_dir[0]) return;
     snprintf(path, sizeof path, "%s/channels.txt", s->data_dir);
-    if (stat(path, &sb) == 0) return;
+    if (stat(path, &sb) == 0 && channels_in(path) > 0) return;   /* your list: never touched (updates keep it too) */
+    int had_file = stat(path, &sb) == 0;                         /* only the how-to: an old list may still replace it */
     snprintf(parent, sizeof parent, "%s", s->data_dir);
+    for (size_t n = strlen(parent); n > 1;) {          /* the wrapper hands us "<plugin folder>/.": drop "/." and "/" */
+        if (n >= 2 && parent[n - 1] == '.' && parent[n - 2] == '/') parent[n -= 2] = 0;
+        else if (parent[n - 1] == '/') parent[--n] = 0;
+        else break;
+    }
     char *sl = strrchr(parent, '/');
     if (!sl || sl == parent) return;
     *sl = 0;                                              /* ".../VST2 Plugins" */
@@ -313,6 +319,7 @@ static void ensure_channels(pc_t *s) {
         got = find_old_list(d, s->data_dir, from, sizeof from);
     }
     if (got && copy_text(from, path)) return;
+    if (had_file) return;                                        /* keep the how-to (and any notes) as it is */
     FILE *f = fopen(path, "w");
     if (f) { fputs(CHANNELS_HOWTO, f); fclose(f); }
 }

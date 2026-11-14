@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 (2026-11-14)
+- **Fixed: 1.1.1 didn't find your old Crate Digger channel list** on an MPC (it looked one folder too deep), so you got the how-to instead of your channels. Now it finds the list, and it also replaces a `channels.txt` that still only holds the how-to.
+- A `channels.txt` with your own channels in it is never changed, and MPC TOOLS keeps it on every update.
+
 ## 1.1.1 (2026-11-14)
 - **Fixed: "add channels to channels.txt" with no file to add them to.** The first start now makes `channels.txt` in the plugin folder: a copy of your old Crate Digger's list if one is on the same drive (in `VST2 Plugins`, `Synths` or `Synths-old`), else a short how-to with examples. Updates keep it.
 
