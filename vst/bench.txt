@@ -1,0 +1,2 @@
+# MPC TOOLS bench (Open MPC tools/bench.c -j) on an MPC One, MPC OS 3.10.1, MPC running, 2026-11-14, PotentialCrates 1.1.0
+{"plugin": "PotentialCrates", "instrument": 1, "open_ms": 0.6, "p99_pct": 1.1, "max_pct": 6.1, "threads_pct": 0.0, "verdict": "PASS", "triggers": 30, "trigger_max_pct": 1.1}
