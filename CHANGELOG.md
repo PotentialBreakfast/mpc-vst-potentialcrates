@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1 (2026-11-14)
+- **Fixed: "add channels to channels.txt" with no file to add them to.** The first start now makes `channels.txt` in the plugin folder: a copy of your old Crate Digger's list if one is on the same drive (in `VST2 Plugins`, `Synths` or `Synths-old`), else a short how-to with examples. Updates keep it.
+
 ## 1.1.0 (2026-11)
 - **MANUAL page.** The plugin's manual is now on the MPC's screen: tap **MANUAL**, then the page buttons along the top (what it does, the controls, how it works with the other PotentialSuite plugins, and good-to-know notes). The full PotentialSuite manual is on the [PotentialSuite page](https://github.com/PotentialBreakfast/potential-plugins).
 - One parameter was added at the end of the list (Manual Page); saved projects open as before. Sound and controls are unchanged.

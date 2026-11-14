@@ -65,6 +65,37 @@ int main(void) {
     pc_t u = {0};
     snprintf(u.data_dir, sizeof u.data_dir, "/nonexistent");
     CHECK(!locate_engine(&u, dir, sizeof dir) && !strcmp(u.engine_error, "ENGINE MISSING"), "missing engine: %s", u.engine_error);
+    /* channels.txt: the first start copies an old Crate Digger's list from the same drive, else writes the how-to */
+    {
+        char drv[] = "/tmp/pc_drive_XXXXXX", me[700], ch[800], line[256];
+        assert(mkdtemp(drv));
+        snprintf(cmd, sizeof cmd, "mkdir -p '%s/VST2 Plugins/PotentialBreaks - VST - PotentialCrates' '%s/Synths-old/sd88me - VST - Crate Digger/cratedigger' "
+                 "&& printf '# mine\\n@somechannel | Some Channel\\n' > '%s/Synths-old/sd88me - VST - Crate Digger/cratedigger/channels.txt'", drv, drv, drv);
+        assert(system(cmd) == 0);
+        pc_t c = {0};
+        snprintf(me, sizeof me, "%s/VST2 Plugins/PotentialBreaks - VST - PotentialCrates", drv);
+        snprintf(c.data_dir, sizeof c.data_dir, "%s", me);
+        ensure_channels(&c);
+        snprintf(ch, sizeof ch, "%s/channels.txt", me);
+        CHECK(channels_in(ch) == 1, "the old Crate Digger's list was not copied");
+        c.ch_mtime = -1; load_channels(&c);
+        CHECK(c.nch == 1 && !strcmp(c.ch[0].name, "Some Channel"), "copied list: %d channels", c.nch);
+        /* no old list anywhere: the how-to, with no channels yet */
+        snprintf(cmd, sizeof cmd, "rm -rf '%s/Synths-old' '%s'", drv, ch);
+        assert(system(cmd) == 0);
+        ensure_channels(&c);
+        FILE *f = fopen(ch, "r");
+        CHECK(f && fgets(line, sizeof line, f) && strstr(line, "PotentialCrates"), "no how-to channels.txt written");
+        if (f) fclose(f);
+        CHECK(channels_in(ch) == 0, "the how-to should hold no live channels");
+        /* an existing list is never touched */
+        snprintf(cmd, sizeof cmd, "printf '@kept\\n' > '%s'", ch);
+        assert(system(cmd) == 0);
+        ensure_channels(&c);
+        CHECK(channels_in(ch) == 1, "an existing channels.txt was changed");
+        snprintf(cmd, sizeof cmd, "rm -rf %s", drv);
+        system(cmd);
+    }
     snprintf(cmd, sizeof cmd, "rm -rf %s", tmpl);
     system(cmd);
     printf(fails ? "FAILED (%d)\n" : "OK: 8 crates, 3 wildness levels, state, no-engine, engine finder\n", fails);

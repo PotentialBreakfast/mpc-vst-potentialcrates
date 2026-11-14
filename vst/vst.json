@@ -2,7 +2,7 @@
  "name": "PotentialCrates",
  "vendor": "PotentialBreaks",
  "uid": "PbCr",
- "version": 1100,
+ "version": 1101,
  "so": "potentialcrates.so",
  "params": "params.json",
  "layout": "layout.conf",

@@ -4,7 +4,7 @@
 
 ![PotentialCrates's DIG page on the MPC (Print Plate look)](docs/images/potentialcrates.png)
 
-*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.0 · needs a network connection*
+*Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.1 · needs a network connection*
 
 Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
 
@@ -62,7 +62,7 @@ It installs next to Crate Digger, not over it: it has its own name, maker and pl
 
 ### Channels (optional)
 
-To dig random uploads from YouTube channels or playlists, make a `channels.txt` in the plugin folder, one per line: a channel link, an `@handle`, a `UC...` ID or a playlist link, then `|` and a name if you like. `Content/channels.example.txt` shows the format. Set **SOURCE** to **CHANNEL** and pick one with the arrows.
+To dig random uploads from YouTube channels or playlists, list them in `channels.txt` in the plugin folder. PotentialCrates makes the file the first time it starts: a copy of an old Crate Digger's list on the same drive if there is one, else a short how-to. Write the channels one per line: a channel link, an `@handle`, a `UC...` ID or a playlist link, then `|` and a name if you like. `Content/channels.example.txt` shows the format. Set **SOURCE** to **CHANNEL** and pick one with the arrows.
 
 ### Discogs token (optional, recommended)
 
