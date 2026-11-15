@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 (2026-11-15)
+
+- A fourth look, **Vintage** (Potential1200's late-80s drum-machine look), on the LOOK keys.
+
 ## 1.1.2 (2026-11-14)
 - **Fixed: 1.1.1 didn't find your old Crate Digger channel list** on an MPC (it looked one folder too deep), so you got the how-to instead of your channels. Now it finds the list, and it also replaces a `channels.txt` that still only holds the how-to.
 - A `channels.txt` with your own channels in it is never changed, and MPC TOOLS keeps it on every update.

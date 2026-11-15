@@ -52,7 +52,7 @@ Check that you have the right to use what you sample before you release it.
 - channels.txt in the plugin's folder lists the YouTube channels for SOURCE: CHANNEL, one per line. The plugin makes it the first time (with your old Crate Digger list, if it finds one).
 - Streaming needs the MPC online. If nothing plays, check the network first, then the status line.
 - Q-Links: AUTO NEXT and SYNC on DIG, VOLUME and the ROLL setting on CRATES.
-- Looks: Print Plate, Night Rack or Colour Block, on the SETTINGS page.
+- Looks: Print Plate, Night Rack, Colour Block or Vintage, on the SETTINGS page.
 
 PotentialCrates is a fork of Crate Digger by sd88me, built on Charles Vestal's schwung-webstream. Thanks to both.
 

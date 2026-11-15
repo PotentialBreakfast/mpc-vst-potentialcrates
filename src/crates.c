@@ -6,7 +6,7 @@
  *   - ROLL (MILD / MEDIUM / WILD): random filters, a search and the first playable result, in one tap
  *   - CRATES: eight one-tap digs (Drum Breaks, Library, Soundtracks, ...), each a few real Discogs genre / style / decade picks
  *   - AUTO NEXT and NEXT: a track that ends or won't play moves on to the next result
- *   - the three PotentialSuite looks (Print Plate, Night Rack, Colour Block) and the LOOK switch
+ *   - the four PotentialSuite looks (Print Plate, Night Rack, Colour Block, Vintage) and the LOOK switch
  *
  * Threads: the core is called only under s->lk. A worker renders the core into a ring (never on MPC's audio thread, as
  * Crate Digger does), drives the one-tap digs and refreshes the screen text. render() only copies from the ring.

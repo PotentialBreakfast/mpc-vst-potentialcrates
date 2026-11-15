@@ -86,7 +86,7 @@ jobs:
         run: |
           mkdir -p vst/build
           gcc -O2 -I kit/tools/vendor/force-shadow/tools -o vst/build/shadow_art kit/tools/shadow_art.c -lm
-          python3 shared/looks/build_looks.py vst kit   # the three looks, merged into one switchable skin
+          python3 shared/looks/build_looks.py vst kit   # the four looks, merged into one switchable skin
           bash kit/tools/test_port.sh vst/vst.json
           CF="-fsanitize=address,undefined -g -O1 -w -std=gnu11 -DYT_POSIX_SPAWN -I src -I src/core -I vst/build -I kit/wrapper"
           # the LOOK switch, on a copy of the built plugin folder

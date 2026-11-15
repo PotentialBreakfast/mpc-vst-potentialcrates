@@ -6,7 +6,7 @@
 
 *Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.2 · needs a network connection*
 
-Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same three looks and LOOK switch as the rest of the suite.
+Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same four looks and LOOK switch as the rest of the suite.
 
 PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-cratedigger)** by sd88me. It uses Crate Digger's streaming engine, which is built on Charles Vestal's [schwung-webstream](https://github.com/charlesvestal/schwung-webstream). Crate Digger's full history is kept in this repo. Thanks to both.
 
@@ -39,7 +39,7 @@ PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-
 - **PLAY**, **STOP**, **BACK 15** and **FWD 15** are the transport.
 - **TRANSPORT SYNC**: a track loads and waits, silent, until you press Play on the MPC, and the MPC's Stop pauses it. This is for resampling in time.
 - **The status line says why** a track won't play: private video, removed, region blocked, rate limited, no network.
-- **LOOK** (on the SETTINGS page) switches between **Print Plate**, **Night Rack** and **Colour Block**. A new look shows the next time the plugin loads.
+- **LOOK** (on the SETTINGS page) switches between **Print Plate**, **Night Rack**, **Colour Block** and **Vintage**. A new look shows the next time the plugin loads.
 - Your project remembers the filters, source, ROLL setting, SYNC, AUTO NEXT and volume.
 
 ![The CRATES page](docs/images/potentialcrates-crates.png)
