@@ -86,3 +86,10 @@ It works without one (Discogs allows 25 requests a minute). A free personal acce
 ## Credits and licence
 
 MIT, see `LICENSE`. Crate Digger is by sd88me and its contributors. The streaming core is by Charles Vestal (`UPSTREAM_LICENSE.txt`, `UPSTREAM_THIRD_PARTY_NOTICES.md`). The engine bundle's programs have their own licences (yt-dlp: Unlicense; ffmpeg: GPL-3.0; Python: PSF), listed in [THIRD_PARTY.md](THIRD_PARTY.md) and shipped in `Content/engine/LICENSES`.
+
+---
+
+## Tested on
+
+MPC One (Gen1) on standard Akai firmware 3.10.1 and on the latest HAKAI firmware (USB-boot method). Gen2 64-bit builds pass Akai's checks but have had limited real-device testing so far.
+
