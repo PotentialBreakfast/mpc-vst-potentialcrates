@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 (2026-11)
+- New **Hi-Fi** look (the fifth on the LOOK selector, from PotentialBox): walnut cheeks, a brushed charcoal faceplate, raised panels, domed knobs lit in the plugin's colour, moulded cream keys and green glass displays.
+- The LOOK selector now has five looks: Print Plate, Night Rack, Colour Block, Vintage and Hi-Fi.
+
 ## 1.3.0 (2026-11)
 
 Crate Digger 2.1.0's faster digging, brought over from sd88me/mpc-vst-cratedigger. Same screen and looks; saved projects load as before.
