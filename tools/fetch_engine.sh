@@ -32,6 +32,8 @@ for arch in armv7 aarch64; do
   mkdir -p "$out/Content/engine/LICENSES"
   cp licenses/GPL-3.0.txt licenses/yt-dlp-UNLICENSE.txt "$out/Content/engine/LICENSES/"
   cp THIRD_PARTY.md "$out/Content/engine/LICENSES/THIRD_PARTY.md"
+  # the search daemon is source (src/core): Crate Digger 2.0.0's zip carries an older copy, so ours replaces it
+  cp src/core/yt_dlp_daemon.py "$out/Content/engine/bin/yt_dlp_daemon.py"
   rm -rf vst/build/engine/tmp
   test -x "$out/Content/engine/bin/yt-dlp" && test -x "$out/Content/engine/bin/ffmpeg"
   echo "engine $arch: $(du -sh "$out/Content" | cut -f1)"

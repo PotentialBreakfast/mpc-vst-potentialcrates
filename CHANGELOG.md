@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0 (2026-11)
+
+Crate Digger 2.1.0's faster digging, brought over from sd88me/mpc-vst-cratedigger. Same screen and looks; saved projects load as before.
+- **Faster Discogs searches.** Releases are looked up in parallel and remembered on the MPC for two weeks, so a repeat search is almost instant.
+- **The next search is often ready at once.** While a track plays, the next batch for the same filters is found in the background (within Discogs' rate limit).
+- **Rows start straight away.** The first rows, and the next ones while a track plays, are got ready before you tap them.
+- **No more removed videos** in the results (releases whose YouTube video is gone are skipped).
+- **Fixed: tracks are no longer cut off near the end** (up to the last 45 s).
+- **Fixed: PotentialCrates now ships its own search engine.** Before, it used an older copy that came inside Crate Digger 2.0.0's download.
+
 ## 1.2.0 (2026-11-15)
 
 - A fourth look, **Vintage** (Potential1200's late-80s drum-machine look), on the LOOK keys.
