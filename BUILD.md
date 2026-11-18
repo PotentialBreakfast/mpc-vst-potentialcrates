@@ -2,7 +2,7 @@
 
 You don't need to build it to use it: download a zip from [Releases](../../releases). This is for people who want to change it.
 
-Everything the release does is in `.github/workflows/release.yml`. By hand, on Linux or WSL with `gcc`, `curl`, `unzip`, Python 3 and `pip install ziglang pillow playwright` (then `python -m playwright install chromium`):
+Everything the release does is in `.github/workflows/release.yml`. By hand, on Linux or WSL with `gcc`, `curl`, `unzip`, Python 3 and `pip install ziglang pillow numpy playwright` (then `python -m playwright install chromium`):
 
 ```
 git clone https://github.com/open-mpc/mpc-vst-plugins kit
