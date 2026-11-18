@@ -6,7 +6,7 @@
 
 *Instrument plugin · MPC OS 3.x · Gen1 and Gen2 · v1.1.2 · needs a network connection*
 
-Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same four looks and LOOK switch as the rest of the suite.
+Free and open source (MIT), made by **PotentialBreaks**. It's part of the **PotentialSuite**, with the same five looks and LOOK switch as the rest of the suite.
 
 PotentialCrates is a fork of **[Crate Digger](https://github.com/sd88me/mpc-vst-cratedigger)** by sd88me. It uses Crate Digger's streaming engine, which is built on Charles Vestal's [schwung-webstream](https://github.com/charlesvestal/schwung-webstream). Crate Digger's full history is kept in this repo. Thanks to both.
 
